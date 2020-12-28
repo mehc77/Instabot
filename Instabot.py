@@ -9,7 +9,7 @@ import time
 ##
 ##
 
-PATH = "C:\Program Files (x86)\chromedriver.exe"
+PATH = "C:\Program Files (x86)\chromedriver.exe" ############### funciona con versión 87.
 driver = webdriver.Chrome(PATH)
 driver.get('https://www.instagram.com/')
 
@@ -39,7 +39,7 @@ try:
         time.sleep(3)
     finally:
         search = driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input")
-        search.send_keys("YourUser/Hashtag")  ###########
+        search.send_keys("#Hashtag")  ###########
         time.sleep(1)
         search.send_keys(Keys.RETURN)
         time.sleep(1)
