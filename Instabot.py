@@ -9,7 +9,7 @@ import time
 ##
 ##
 
-PATH = "C:\Program Files (x86)\chromedriver.exe" ############### funciona con versión 87.
+PATH = "C:\Program Files (x86)\chromedriver.exe" ############### testeado con versión 87.
 driver = webdriver.Chrome(PATH)
 driver.get('https://www.instagram.com/')
 
@@ -28,6 +28,17 @@ try:
     search = driver.find_element_by_name("password")
     search.send_keys("YourPassword")#############
     search.send_keys(Keys.RETURN)
+    
+    element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//button[contains(text(), 'Ahora no')]")) ## El mensaje depende del idioma
+    ) 
+    element.click()
+	
+    element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//button[contains(text(), 'Ahora no')]"))
+    ) 
+    element.click()
+    
     time.sleep(5)
 
     try:
@@ -55,17 +66,18 @@ try:
 
         i = 0
         while i < 10:
-            element = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located(
-                    (By.CLASS_NAME, "fr66n"))
-            )  # wir warten 10 sekunden ob der webdriver die ID findet
-            element.click()  # Beirag geliked
-            time.sleep(randrange(3, 15))
-
-            search = driver.find_element_by_tag_name("body")
-            search.send_keys(Keys.ARROW_RIGHT)  # nächster beitrag
-            time.sleep(randrange(1, 7))
-            i = i + 1
+            try:
+                element = WebDriverWait(driver, 5).until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, "//section/span/button/div/span[*[local-name()='svg']/@aria-label='Me gusta']")) ## Dar like si no lo tiene
+                )
+                element.click()  # Beirag geliked
+            finally:
+                time.sleep(randrange(2, 6))
+                search = driver.find_element_by_tag_name("body")
+                search.send_keys(Keys.ARROW_RIGHT)  # nächster beitrag
+                time.sleep(randrange(1, 5))
+                i = i + 1
 
 
 
