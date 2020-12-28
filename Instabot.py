@@ -71,7 +71,10 @@ try:
                     EC.presence_of_element_located(
                         (By.XPATH, "//section/span/button/div/span[*[local-name()='svg']/@aria-label='Me gusta']")) ## Dar like si no lo tiene
                 )
-                element.click()  # Beirag geliked
+                element.click()  
+            except Exception:
+                # correct security code
+                pass    		
             finally:
                 time.sleep(randrange(2, 6))
                 search = driver.find_element_by_tag_name("body")
