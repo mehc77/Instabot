@@ -72,17 +72,19 @@ try:
     time.sleep(randrange(4, 10))    
     
     # Listado de hashtags
-    hashtags = ['#CiclismoFemenino',
-                '#Strava', '#Instacycling', '#WomeninSports', '#WeLoveCycling', '#WomenonBikes', '#CyclingPassion', '#CoffeeLover', '#FelizNavidad', '#Christmas', '#Etxeondo',
-                '#btt', '#love', '#cycling', '#together', '#bici', '#bike', '#womenlovebikes', '#MerryXmas', '#MerryChristmas', '#CyclingisLife', '#mtb', '#WYMTM', '#cyclingphotos', 
-                '#LoveCycling', '#KitFitCycling', '#WomensCycling', '#LaVidaenBici', '#CarpeDiem', '#CyclingPhotooftheDay', '#OutSideisFree', '#cyclingadventures', '#mountains', 
-                '#CyclingPics', '#CyclingShots', '#igerscycling', '#BeautyofCycling', '#bikingadventures', '#StravaPhoto', '#ForeverbuttPhotos', '#Ciclismo']
+    hashtags = ['#CiclismoFemenino', '#FromWhereIRide', '#Smile', '#IAmSpecialized', '#cyclingphotos', '#mountains', '#Etxeondo', '#cyclingadventures', '#cyclist',
+                '#Strava', '#Instacycling', '#WomeninSports', '#WeLoveCycling', '#WomenonBikes', '#CyclingPassion', '#CoffeeLover', '#FelizNavidad', '#ciclista',
+                '#btt', '#love', '#cycling', '#together', '#bici', '#bike', '#womenlovebikes', '#CyclingisLife', '#mtb', '#WYMTM', '#Ciclismo', '#nofilters',   
+                '#LoveCycling', '#KitFitCycling', '#WomensCycling', '#LaVidaenBici', '#CarpeDiem', '#CyclingPhotooftheDay', '#OutSideisFree',   
+                '#CyclingPics', '#CyclingShots', '#igerscycling', '#BeautyofCycling', '#bikingadventures', '#StravaPhoto', '#ForeverbuttPhotos']
+
+    now = datetime.datetime.now()
+    print(now.strftime("%Y-%m-%d %H:%M:%S"), hash_selec, len(hashtags))        
+    print(now.strftime("%Y-%m-%d %H:%M:%S"), likes_tot, len(hashtags)*num_likes)   
 
     for index in range(len(hashtags)): # bucle para todos los hashtags
 
-        now = datetime.datetime.now()
-        print(now.strftime("%Y-%m-%d %H:%M:%S"), hash_selec, len(hashtags))        
-        print(now.strftime("%Y-%m-%d %H:%M:%S"), likes_tot, len(hashtags)*num_likes)        		
+        now = datetime.datetime.now()      		
         print(now.strftime("%Y-%m-%d %H:%M:%S"), hashtag, hashtags[index])        
             
         search = driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input")
