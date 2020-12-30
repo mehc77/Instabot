@@ -10,8 +10,8 @@ import time
 import datetime
 
 # Usuario y password
-user = "xx"
-password = "xx"
+user = "xx" 
+password = "xx" 
 
 # Mensajes pop-up
 not_now = "//button[contains(text(), 'Ahora no')]"
@@ -22,25 +22,31 @@ like = "//section/span/button/div/span[*[local-name()='svg']/@aria-label='Me gus
 hello = "Iniciando Instabot mejorado por mehc de astropajo.com . . ."
 usuario = "Conectando con "
 hash_selec = ": Hashtags seleccionados: " 
-likes_tot = ": Likes previstos: "
+likes_prev = ": Likes previstos: "
 hashtag = ": Hashtag: "
 like_num = ": Like número: "
 not_like = ", ya tenía like."
 exception_limit = ": Límite de actividad excedido, mañana más."
 fin = "Fin!, cerrando programa . . ."
 cambio_hash = "Esperando para cambio de hashtag . . ."
+likes_acum = "Likes dados hasta el momento: "
+likes_tot = "Likes dados en total: "
+fin_inicio = ": Se inició: "
+hash_tot = ": Hashtags procesados: " 
 
 # Variables
 num_likes = 50 # Likes por hashtag, tener en cuenta de no sobrepasar el límite diario que supuestamente son 2400.
-PATH = "..\chromedriver.exe" # Testeado en versión 87
+PATH = "I:\Instabot-master\driver\chromedriver.exe" # Testeado en versión 87
 driver = webdriver.Chrome(PATH)
 driver.get('https://www.instagram.com/')
+cont = 0
+cont_h = 0
+f_inicio = datetime.datetime.now()
 
 time.sleep(2)
 
 try:
-    now = datetime.datetime.now()
-    print(now.strftime("%Y-%m-%d %H:%M:%S"), hello)  
+    print(f_inicio.strftime("%Y-%m-%d %H:%M:%S"), hello)  
 
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/div/div/div[2]/button[1]"))
@@ -59,12 +65,12 @@ try:
 
     search.send_keys(Keys.RETURN)
     
-    element = WebDriverWait(driver, 10).until(
+    element = WebDriverWait(driver, 8).until(
         EC.presence_of_element_located((By.XPATH, not_now))
     ) 
     element.click()
     
-    element = WebDriverWait(driver, 10).until(
+    element = WebDriverWait(driver, 8).until(
         EC.presence_of_element_located((By.XPATH, not_now))
     ) 
     element.click()
@@ -72,20 +78,22 @@ try:
     time.sleep(randrange(4, 10))    
     
     # Listado de hashtags
-    hashtags = ['#CiclismoFemenino', '#FromWhereIRide', '#Smile', '#IAmSpecialized', '#cyclingphotos', '#mountains', '#Etxeondo', '#cyclingadventures', '#cyclist',
-                '#Strava', '#Instacycling', '#WomeninSports', '#WeLoveCycling', '#WomenonBikes', '#CyclingPassion', '#CoffeeLover', '#FelizNavidad', '#ciclista',
+    # '#FelizNavidad','#christmas2020', '#christmasspirit', '#christmas',  
+    hashtags = ['#ciclista', '#CiclismoFemenino', '#FromWhereIRide', '#Smile', '#IAmSpecialized', '#cyclingphotos', '#mountains', '#Etxeondo', '#cyclingadventures', 
+                '#Strava', '#Instacycling', '#WomeninSports', '#WeLoveCycling', '#WomenonBikes', '#CyclingPassion', '#CoffeeLover', '#cyclist',
                 '#btt', '#love', '#cycling', '#together', '#bici', '#bike', '#womenlovebikes', '#CyclingisLife', '#mtb', '#WYMTM', '#Ciclismo', '#nofilters',   
-                '#LoveCycling', '#KitFitCycling', '#WomensCycling', '#LaVidaenBici', '#CarpeDiem', '#CyclingPhotooftheDay', '#OutSideisFree',   
+                '#LoveCycling', '#KitFitCycling', '#WomensCycling', '#LaVidaenBici', '#CarpeDiem', '#CyclingPhotooftheDay', '#OutSideisFree', '#bicycle',  
                 '#CyclingPics', '#CyclingShots', '#igerscycling', '#BeautyofCycling', '#bikingadventures', '#StravaPhoto', '#ForeverbuttPhotos']
 
     now = datetime.datetime.now()
     print(now.strftime("%Y-%m-%d %H:%M:%S"), hash_selec, len(hashtags))        
-    print(now.strftime("%Y-%m-%d %H:%M:%S"), likes_tot, len(hashtags)*num_likes)   
+    print(now.strftime("%Y-%m-%d %H:%M:%S"), likes_prev, len(hashtags)*num_likes)   
 
     for index in range(len(hashtags)): # bucle para todos los hashtags
 
+        cont_h = cont_h + 1 
         now = datetime.datetime.now()      		
-        print(now.strftime("%Y-%m-%d %H:%M:%S"), hashtag, hashtags[index])        
+        print(now.strftime("%Y-%m-%d %H:%M:%S"), hashtag, index+1, " - ", hashtags[index])        
             
         search = driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input")
         search.send_keys(hashtags[index]) 
@@ -105,11 +113,13 @@ try:
         i = 0        
         while i < num_likes:
             try:
-                element = WebDriverWait(driver, 5).until(
+                element = WebDriverWait(driver, 9).until(
                     EC.presence_of_element_located(
                         (By.XPATH, like)) 
                 )  
+                time.sleep(randrange(4, 8))
                 element.click()
+                cont = cont + 1
                 now = datetime.datetime.now()
                 print(now.strftime("%Y-%m-%d %H:%M:%S"), like_num, i+1)
             except Exception:
@@ -125,7 +135,7 @@ try:
 
                 # Reviso si ha saltado el límite excedido
                 try:
-                    element2 = WebDriverWait(driver, 5).until(
+                    element2 = WebDriverWait(driver, 7).until(
                     EC.presence_of_element_located(
                         (By.XPATH, limit_exceeded)) 
                     )  
@@ -134,19 +144,22 @@ try:
                     print(now.strftime("%Y-%m-%d %H:%M:%S"), exception_limit)
                     raise Exception(now.strftime("%Y-%m-%d %H:%M:%S"), exception_limit)   
                 except Exception:
-                    pass  
+                    pass # todo ok, seguimos 
                 finally:
                     time.sleep(randrange(1, 5))
 
         # Esperamos para cambiar de hashtag
         now = datetime.datetime.now()
         print(now.strftime("%Y-%m-%d %H:%M:%S"), cambio_hash)
+        print(now.strftime("%Y-%m-%d %H:%M:%S"), likes_acum, cont)
         time.sleep(randrange(50, 200))
 
 finally:
     now = datetime.datetime.now()
     print(now.strftime("%Y-%m-%d %H:%M:%S"), fin)
+    print(now.strftime("%Y-%m-%d %H:%M:%S"), fin_inicio, f_inicio.strftime("%Y-%m-%d %H:%M:%S"))
+    print(now.strftime("%Y-%m-%d %H:%M:%S"), hash_tot, cont_h)
+    print(now.strftime("%Y-%m-%d %H:%M:%S"), likes_tot, cont)
     time.sleep(randrange(5, 15))
     driver.quit()
-
 
