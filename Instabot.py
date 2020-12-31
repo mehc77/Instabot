@@ -10,12 +10,12 @@ import time
 import datetime
 
 # Usuario y password
-user = "xx" 
-password = "xx" 
+user = "xx" # 
+password = "xx" # 
 
 # Mensajes pop-up
 not_now = "//button[contains(text(), 'Ahora no')]"
-limit_exceeded = "//button[contains(text(), 'Avísanos')]"
+limit_exceeded = "//button[contains(text(), 'Aceptar')]" # Mensaje que da cuando te bloquea la actividad
 like = "//section/span/button/div/span[*[local-name()='svg']/@aria-label='Me gusta']"
 
 # Mensajes
@@ -135,7 +135,7 @@ try:
 
                 # Reviso si ha saltado el límite excedido
                 try:
-                    element2 = WebDriverWait(driver, 7).until(
+                    element2 = WebDriverWait(driver, 6).until(
                     EC.presence_of_element_located(
                         (By.XPATH, limit_exceeded)) 
                     )  
@@ -146,13 +146,13 @@ try:
                 except Exception:
                     pass # todo ok, seguimos 
                 finally:
-                    time.sleep(randrange(1, 5))
+                    time.sleep(randrange(2, 5))
 
         # Esperamos para cambiar de hashtag
         now = datetime.datetime.now()
         print(now.strftime("%Y-%m-%d %H:%M:%S"), cambio_hash)
         print(now.strftime("%Y-%m-%d %H:%M:%S"), likes_acum, cont)
-        time.sleep(randrange(50, 200))
+        time.sleep(randrange(61, 361))
 
 finally:
     now = datetime.datetime.now()
@@ -162,4 +162,5 @@ finally:
     print(now.strftime("%Y-%m-%d %H:%M:%S"), likes_tot, cont)
     time.sleep(randrange(5, 15))
     driver.quit()
+
 
