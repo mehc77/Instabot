@@ -15,7 +15,8 @@ password = "xx" #
 
 # Mensajes pop-up
 not_now = "//button[contains(text(), 'Ahora no')]"
-limit_exceeded = "//button[contains(text(), 'Aceptar')]" # Mensaje que da cuando te bloquea la actividad
+limit_exceeded = "//button[contains(text(), 'Avísanos')]" # Mensaje que da cuando te bloquea la actividad
+limit_exceeded2 = "//button[contains(text(), 'Informar de un problema')]" # Otro mensaje que también sale al bloquear
 like = "//section/span/button/div/span[*[local-name()='svg']/@aria-label='Me gusta']"
 
 # Mensajes
@@ -135,7 +136,7 @@ try:
 
                 # Reviso si ha saltado el límite excedido
                 try:
-                    element2 = WebDriverWait(driver, 6).until(
+                    element2 = WebDriverWait(driver, 5).until(
                     EC.presence_of_element_located(
                         (By.XPATH, limit_exceeded)) 
                     )  
@@ -146,7 +147,22 @@ try:
                 except Exception:
                     pass # todo ok, seguimos 
                 finally:
-                    time.sleep(randrange(2, 5))
+                    time.sleep(randrange(1, 3))
+
+                # Reviso si ha saltado el límite excedido 2
+                try:
+                    element3 = WebDriverWait(driver, 5).until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, limit_exceeded2)) 
+                    )  
+                    element3.click()
+                    now = datetime.datetime.now()
+                    print(now.strftime("%Y-%m-%d %H:%M:%S"), exception_limit)
+                    raise Exception(now.strftime("%Y-%m-%d %H:%M:%S"), exception_limit)   
+                except Exception:
+                    pass # todo ok, seguimos 
+                finally:
+                    time.sleep(randrange(2, 4))
 
         # Esperamos para cambiar de hashtag
         now = datetime.datetime.now()
