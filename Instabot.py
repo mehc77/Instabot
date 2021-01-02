@@ -1,4 +1,6 @@
 
+# instaBot vMehc 1.3
+
 # imports
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -10,7 +12,7 @@ import time
 import datetime
 
 # Usuario y password
-user = "xx" # 
+user = "xx" #
 password = "xx" # 
 
 # Mensajes pop-up
@@ -36,7 +38,7 @@ fin_inicio = ": Se inició: "
 hash_tot = ": Hashtags procesados: " 
 
 # Variables
-num_likes = 50 # Likes por hashtag, tener en cuenta de no sobrepasar el límite diario que supuestamente son 2400.
+num_likes = 25 # Likes por hashtag, tener en cuenta de no sobrepasar el límite diario que supuestamente son 2400.
 PATH = "I:\Instabot-master\driver\chromedriver.exe" # Testeado en versión 87
 driver = webdriver.Chrome(PATH)
 driver.get('https://www.instagram.com/')
@@ -79,10 +81,10 @@ try:
     time.sleep(randrange(4, 10))    
     
     # Listado de hashtags
-    # '#FelizNavidad','#christmas2020', '#christmasspirit', '#christmas',  
-    hashtags = ['#ciclista', '#CiclismoFemenino', '#FromWhereIRide', '#Smile', '#IAmSpecialized', '#cyclingphotos', '#mountains', '#Etxeondo', '#cyclingadventures', 
-                '#Strava', '#Instacycling', '#WomeninSports', '#WeLoveCycling', '#WomenonBikes', '#CyclingPassion', '#CoffeeLover', '#cyclist',
-                '#btt', '#love', '#cycling', '#together', '#bici', '#bike', '#womenlovebikes', '#CyclingisLife', '#mtb', '#WYMTM', '#Ciclismo', '#nofilters',   
+    #   
+    hashtags = ['#womenlovebikes', '#cyclingadventures', '#ciclista', '#CiclismoFemenino', '#FromWhereIRide', '#Smile', '#IAmSpecialized', '#cyclingphotos',  
+                '#Strava', '#Instacycling', '#WomeninSports', '#WeLoveCycling', '#WomenonBikes', '#CyclingPassion', '#CoffeeLover', '#cyclist', '#mountains', 
+                '#btt', '#love', '#cycling', '#together', '#bici', '#bike', '#CyclingisLife', '#mtb', '#WYMTM', '#Ciclismo', '#nofilters', '#Etxeondo', '#FelizNavidad', '#christmas',  
                 '#LoveCycling', '#KitFitCycling', '#WomensCycling', '#LaVidaenBici', '#CarpeDiem', '#CyclingPhotooftheDay', '#OutSideisFree', '#bicycle',  
                 '#CyclingPics', '#CyclingShots', '#igerscycling', '#BeautyofCycling', '#bikingadventures', '#StravaPhoto', '#ForeverbuttPhotos']
 
@@ -98,18 +100,18 @@ try:
             
         search = driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input")
         search.send_keys(hashtags[index]) 
-        time.sleep(randrange(1, 5))
+        time.sleep(randrange(3, 5))
         search.send_keys(Keys.RETURN)
         time.sleep(randrange(3, 9))
         search.send_keys(Keys.RETURN)
-        time.sleep(randrange(5, 15))# La búsqueda se realiza en el campo de búsqueda y el resultado se selecciona confirmando dos veces con retorno
+        time.sleep(randrange(10, 15))# La búsqueda se realiza en el campo de búsqueda y el resultado se selecciona confirmando dos veces con retorno
 
         element = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located(
                 (By.XPATH, "/html/body/div[1]/section/main/article/div[1]/div/div/div[1]/div[2]/a/div"))
         )  # esperamos 10 segundos si el webdriver encuentra la ID
         element.click()  # se seleccionará primer elemento
-        time.sleep(randrange(4, 9))
+        time.sleep(randrange(5, 9))
 
         i = 0        
         while i < num_likes:
@@ -165,6 +167,7 @@ try:
                     time.sleep(randrange(2, 4))
 
         # Esperamos para cambiar de hashtag
+        search.send_keys(Keys.ESCAPE)
         now = datetime.datetime.now()
         print(now.strftime("%Y-%m-%d %H:%M:%S"), cambio_hash)
         print(now.strftime("%Y-%m-%d %H:%M:%S"), likes_acum, cont)
