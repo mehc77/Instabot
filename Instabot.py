@@ -1,5 +1,5 @@
 
-# instaBot vMehc 1.3
+# instaBot vMehc 1.4
 
 # imports
 from selenium import webdriver
@@ -8,15 +8,17 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from random import randrange
+from selenium.webdriver.chrome.options import Options
 import time
 import datetime
 
 # Usuario y password
-user = "xx" #
+user = "xx" # 
 password = "xx" # 
 
 # Mensajes pop-up
 not_now = "//button[contains(text(), 'Ahora no')]"
+guardar = "//button[contains(text(), 'Guardar Información')]" # Guardar información inicio sesión en navegador
 limit_exceeded = "//button[contains(text(), 'Avísanos')]" # Mensaje que da cuando te bloquea la actividad
 limit_exceeded2 = "//button[contains(text(), 'Informar de un problema')]" # Otro mensaje que también sale al bloquear
 like = "//section/span/button/div/span[*[local-name()='svg']/@aria-label='Me gusta']"
@@ -39,49 +41,66 @@ hash_tot = ": Hashtags procesados: "
 
 # Variables
 num_likes = 25 # Likes por hashtag, tener en cuenta de no sobrepasar el límite diario que supuestamente son 2400.
+chrome_options = Options()
+chrome_options.add_argument("user-data-dir=selenium") # Guardamos cookies e información
 PATH = "I:\Instabot-master\driver\chromedriver.exe" # Testeado en versión 87
-driver = webdriver.Chrome(PATH)
-driver.get('https://www.instagram.com/')
+driver = webdriver.Chrome(PATH, options=chrome_options)
+driver.get('https://instagram.com/accounts/logout') # Empezamos con logout porque usamos cookies para que no diga que es siempre la primera vez del navegador
+time.sleep(randrange(4, 8)) # esperamos..
+driver.get('https://instagram.com/accounts/login') # Ahora login por las cookies y cuentas que tengamos almacenadas
 cont = 0
 cont_h = 0
 f_inicio = datetime.datetime.now()
 
-time.sleep(2)
+time.sleep(randrange(3, 7)) # esperamos..
 
 try:
     print(f_inicio.strftime("%Y-%m-%d %H:%M:%S"), hello)  
 
-    element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/div/div/div[2]/button[1]"))
-    ) # esperamos 10 segundos si el webdriver encuentra la ID
-    element.click()
+    try:
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/div/div/div[2]/button[1]"))
+        ) # esperamos 10 segundos si el webdriver encuentra la ID
+        element.click()
+    except Exception:
+       pass # todo ok, seguimos 
+    finally:
+        search = driver.find_element_by_name("username")
+        search.send_keys(user)
+        time.sleep(randrange(2, 6)) # esperamos..
+        now = datetime.datetime.now()
+        print(now.strftime("%Y-%m-%d %H:%M:%S"), usuario, user, " . . .")  
 
-    search = driver.find_element_by_name("username")
-    search.send_keys(user)
-    time.sleep(randrange(2, 6)) # esperamos..
-    now = datetime.datetime.now()
-    print(now.strftime("%Y-%m-%d %H:%M:%S"), usuario, user, " . . .")  
+        search = driver.find_element_by_name("password")
+        search.send_keys(password)
+        time.sleep(randrange(3, 7)) # esperamos..
 
-    search = driver.find_element_by_name("password")
-    search.send_keys(password)
-    time.sleep(randrange(3, 7)) # esperamos..
+        search.send_keys(Keys.RETURN)
 
-    search.send_keys(Keys.RETURN)
-    
-    element = WebDriverWait(driver, 8).until(
-        EC.presence_of_element_located((By.XPATH, not_now))
-    ) 
-    element.click()
-    
-    element = WebDriverWait(driver, 8).until(
-        EC.presence_of_element_located((By.XPATH, not_now))
-    ) 
-    element.click()
+    try:    
+        element = WebDriverWait(driver, 8).until(
+            EC.presence_of_element_located((By.XPATH, guardar))
+        ) 
+        element.click()
+    except Exception:
+       pass # todo ok, seguimos     
+    finally:
+       time.sleep(randrange(3, 6))
+
+    try:
+        element = WebDriverWait(driver, 8).until(
+            EC.presence_of_element_located((By.XPATH, not_now))
+        ) 
+        element.click()
+    except Exception:
+       pass # todo ok, seguimos 
+    finally:
+       time.sleep(randrange(3, 6))
 
     time.sleep(randrange(4, 10))    
     
     # Listado de hashtags
-    #   
+    # '#womenlovebikes'    
     hashtags = ['#womenlovebikes', '#cyclingadventures', '#ciclista', '#CiclismoFemenino', '#FromWhereIRide', '#Smile', '#IAmSpecialized', '#cyclingphotos',  
                 '#Strava', '#Instacycling', '#WomeninSports', '#WeLoveCycling', '#WomenonBikes', '#CyclingPassion', '#CoffeeLover', '#cyclist', '#mountains', 
                 '#btt', '#love', '#cycling', '#together', '#bici', '#bike', '#CyclingisLife', '#mtb', '#WYMTM', '#Ciclismo', '#nofilters', '#Etxeondo', '#FelizNavidad', '#christmas',  
