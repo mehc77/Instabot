@@ -1,5 +1,5 @@
 
-# instaBot vMehc 1.4
+# instaBot vMehc 1.5
 
 # imports
 from selenium import webdriver
@@ -9,6 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from random import randrange
 from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import TimeoutException
 import time
 import datetime
 
@@ -38,6 +39,7 @@ likes_acum = "Likes dados hasta el momento: "
 likes_tot = "Likes dados en total: "
 fin_inicio = ": Se inició: "
 hash_tot = ": Hashtags procesados: " 
+txt_descanso = "Hacemos un breve descanso . . ."
 
 # Variables
 num_likes = 25 # Likes por hashtag, tener en cuenta de no sobrepasar el límite diario que supuestamente son 2400.
@@ -51,6 +53,7 @@ driver.get('https://instagram.com/accounts/login') # Ahora login por las cookies
 cont = 0
 cont_h = 0
 f_inicio = datetime.datetime.now()
+descanso = 100 # Para hacer un breve descanso cada x likes, por defecto 100.
 
 time.sleep(randrange(3, 7)) # esperamos..
 
@@ -100,12 +103,8 @@ try:
     time.sleep(randrange(4, 10))    
     
     # Listado de hashtags
-    # '#womenlovebikes'    
-    hashtags = ['#womenlovebikes', '#cyclingadventures', '#ciclista', '#CiclismoFemenino', '#FromWhereIRide', '#Smile', '#IAmSpecialized', '#cyclingphotos',  
-                '#Strava', '#Instacycling', '#WomeninSports', '#WeLoveCycling', '#WomenonBikes', '#CyclingPassion', '#CoffeeLover', '#cyclist', '#mountains', 
-                '#btt', '#love', '#cycling', '#together', '#bici', '#bike', '#CyclingisLife', '#mtb', '#WYMTM', '#Ciclismo', '#nofilters', '#Etxeondo', '#FelizNavidad', '#christmas',  
-                '#LoveCycling', '#KitFitCycling', '#WomensCycling', '#LaVidaenBici', '#CarpeDiem', '#CyclingPhotooftheDay', '#OutSideisFree', '#bicycle',  
-                '#CyclingPics', '#CyclingShots', '#igerscycling', '#BeautyofCycling', '#bikingadventures', '#StravaPhoto', '#ForeverbuttPhotos']
+    hashtags = ['#likesforlike', '#likeforlikes', '#likeforfollow', '#love', '#bhfyp', '#WYMTM', '#nofilters', '#Smile', '#together', '#instalike', '#CarpeDiem' # Generic (11)				
+               ] 
 
     now = datetime.datetime.now()
     print(now.strftime("%Y-%m-%d %H:%M:%S"), hash_selec, len(hashtags))        
@@ -165,8 +164,8 @@ try:
                     now = datetime.datetime.now()
                     print(now.strftime("%Y-%m-%d %H:%M:%S"), exception_limit)
                     raise Exception(now.strftime("%Y-%m-%d %H:%M:%S"), exception_limit)   
-                except Exception:
-                    pass # todo ok, seguimos 
+                except TimeoutException:
+                    pass
                 finally:
                     time.sleep(randrange(1, 3))
 
@@ -180,10 +179,15 @@ try:
                     now = datetime.datetime.now()
                     print(now.strftime("%Y-%m-%d %H:%M:%S"), exception_limit)
                     raise Exception(now.strftime("%Y-%m-%d %H:%M:%S"), exception_limit)   
-                except Exception:
-                    pass # todo ok, seguimos 
+                except TimeoutException:
+                    pass
                 finally:
                     time.sleep(randrange(2, 4))
+
+                if cont == descanso:
+                    print(now.strftime("%Y-%m-%d %H:%M:%S"), txt_descanso)
+                    descanso = descanso + 100
+                    time.sleep(randrange(31, 181))
 
         # Esperamos para cambiar de hashtag
         search.send_keys(Keys.ESCAPE)
